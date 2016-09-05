@@ -11,7 +11,7 @@ namespace WebExtension
     {
         public ActionResult Index()
         {
-            return Json(new {value = "jsonIndex"});
+            return Json(new {value = "jsonIndex"}, JsonRequestBehavior.AllowGet);
         }
     }
 }

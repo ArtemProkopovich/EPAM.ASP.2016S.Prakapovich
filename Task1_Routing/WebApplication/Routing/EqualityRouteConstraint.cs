@@ -6,10 +6,11 @@ using System.Web.Routing;
 
 namespace WebApplication.Routing
 {
-    public class CustomRouteConstraint:IRouteConstraint
+    public class EqualityRouteConstraint : IRouteConstraint
     {
         private readonly string param;
-        public CustomRouteConstraint(string param)
+
+        public EqualityRouteConstraint(string param)
         {
             this.param = param;
         }

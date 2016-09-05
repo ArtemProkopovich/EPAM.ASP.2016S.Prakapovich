@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Routing.Constraints;
 using System.Web.Routing;
 using WebApplication.Routing;
 
@@ -13,43 +14,65 @@ namespace WebApplication
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
-                name: "Action",
+                name: "StaticParam&CustomOptinonalSegment",
                 url: "Action/{param}",
-                defaults: new { controller = "Home", action = "Action", param = UrlParameter.Optional }
-            );
+                defaults: new {controller = "Home", action = "Action", param = UrlParameter.Optional},
+                namespaces: new[] {"WebApplication.Controllers"}
+                );
 
             routes.MapRoute(
-                name: "About",
+                name: "Catchall",
                 url: "About/{*catchall}",
-                defaults: new { controller = "Home", action = "About"}
-            );
+                defaults: new {controller = "Home", action = "About"},
+                namespaces: new[] {"WebApplication.Controllers"}
+                );
 
             routes.MapRoute(
-                name: "Home",
+                name: "NamespacePriority",
                 url: "Index/json",
-                defaults: new { controller = "Home", action = "Index"}
-            );
+                defaults: new {controller = "Home", action = "Index"},
+                namespaces: new[] {"WebExtension"}
+                );
 
             routes.MapRoute(
                 name: "CustomConstraint",
                 url: "Home/Index/{id}",
                 defaults: new {controller = "Home", action = "NotFound", id = UrlParameter.Optional},
-                constraints: new {id = new CustomRouteConstraint("404")}
+                constraints: new {id = new EqualityRouteConstraint("404")},
+                namespaces: new[] {"WebApplication.Controllers"}
+                );
+
+            routes.MapRoute(
+                name: "CompoundConstraint",
+                url: "login/{login}/{password}",
+                defaults: new {controller = "User", action = "Login"},
+                constraints:
+                    new
+                    {
+                        login =
+                            new CompoundRouteConstraint(new IRouteConstraint[]
+                            {new AlphaRouteConstraint(), new MinLengthRouteConstraint(6)}),
+                        password = new CompoundRouteConstraint(new IRouteConstraint[]
+                        {new RegexRouteConstraint("^[A-Za-z0-9]*$"), new MinLengthRouteConstraint(6)})
+                    }
                 );
 
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-            );
+                defaults: new {controller = "Home", action = "Index", id = UrlParameter.Optional},
+                namespaces: new[] {"WebApplication.Controllers"}
+                );
 
             routes.MapRoute(
                 name: "NotFound",
                 url: "{*catchall}",
-                defaults: new { controller = "Home", action = "NotFound"}
-            );
+                defaults: new {controller = "Home", action = "NotFound"},
+                namespaces: new[] {"WebApplication.Controllers"}
+                );
         }
     }
 }
