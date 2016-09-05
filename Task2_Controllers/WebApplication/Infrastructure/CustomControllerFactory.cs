@@ -11,8 +11,15 @@ namespace WebApplication.Infrastructure
 {
     public class CustomControllerFactory : IControllerFactory
     {
-        public IController CreateController(RequestContext requestContext, string controllerName)
+        private CustomControllerOctivator customControllerOctivator;
+
+        public CustomControllerFactory(CustomControllerOctivator customControllerOctivator)
         {
+            this.customControllerOctivator = customControllerOctivator;
+        }
+
+        public IController CreateController(RequestContext requestContext, string controllerName)
+        {           
             Type controllerType;
             switch (controllerName)
             {
@@ -27,7 +34,7 @@ namespace WebApplication.Infrastructure
                     controllerType = typeof(ProductController);
                     break;
             }
-            return Activator.CreateInstance(controllerType) as IController;
+            return customControllerOctivator.Create(requestContext, controllerType);
         }
 
         public SessionStateBehavior GetControllerSessionBehavior(RequestContext requestContext, string controllerName)
