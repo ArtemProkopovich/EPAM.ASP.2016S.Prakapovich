@@ -12,7 +12,8 @@ namespace WebApplication
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            RouteTable.Routes.MapMvcAttributeRoutes();
+            RouteConfig.RegisterRoutes(RouteTable.Routes);            
         }
     }
 }

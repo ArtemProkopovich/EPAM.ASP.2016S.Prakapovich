@@ -14,7 +14,6 @@ namespace WebApplication
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
                 name: "StaticParam&CustomOptinonalSegment",
@@ -64,12 +63,13 @@ namespace WebApplication
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new {controller = "Home", action = "Index", id = UrlParameter.Optional},
+                constraints: new {controller = "Home|Example|User|"},
                 namespaces: new[] {"WebApplication.Controllers"}
                 );
 
             routes.MapRoute(
-                name: "NotFound",
-                url: "{*catchall}",
+                name: "Error",
+                url: "{*.}",
                 defaults: new {controller = "Home", action = "NotFound"},
                 namespaces: new[] {"WebApplication.Controllers"}
                 );
